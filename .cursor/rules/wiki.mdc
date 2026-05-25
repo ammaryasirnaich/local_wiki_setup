@@ -1,0 +1,12 @@
+---
+description: Follow the local wiki schema for ingest, query, lint, and maintenance
+alwaysApply: true
+---
+
+# Local Wiki
+
+For this project, read and follow [AGENTS.md](AGENTS.md) at the project root before any wiki operation (ingest, query, lint, or edits under `wiki/`).
+
+- Never modify files in `raw/`
+- Always update `wiki/index.md` and `wiki/log.md` after wiki changes
+- Use the page format, log header format, and categorized index described in AGENTS.md
