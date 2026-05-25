@@ -1,6 +1,8 @@
 # Local Wiki Template
 
-A local, Cursor-maintained personal knowledge base built from Markdown, PDF, and text sources. Drop raw documents into a folder, ask the agent to ingest them, and grow a structured, interlinked wiki that compounds over time.
+A local, agent-maintained personal knowledge base built from Markdown, PDF, and text sources. Drop raw documents into a folder, ask the agent to ingest them, and grow a structured, interlinked wiki that compounds over time.
+
+Works with **[Cursor](https://cursor.com)** (Agent mode) and **[Claude Code](https://docs.anthropic.com/en/docs/claude-code)** — same `AGENTS.md` schema, same `raw/` → `wiki/` workflow.
 
 ## Inspired by Karpathy's LLM Wiki
 
@@ -16,7 +18,7 @@ This template follows [Andrej Karpathy's LLM Wiki](https://gist.github.com/karpa
 - [danvega/karpathy-wiki](https://github.com/danvega/karpathy-wiki) — Java Spring Shell CLI with automated compile and research agents
 - [kytmanov/obsidian-llm-wiki-local](https://github.com/kytmanov/obsidian-llm-wiki-local) — Obsidian vault + local LLM (Ollama) pipeline
 
-This template is a **lightweight, Cursor + `AGENTS.md` variant**—not a fork of those projects. You drive workflows with natural-language prompts in Cursor Agent mode.
+This template is a **lightweight, `AGENTS.md` schema variant**—not a fork of those projects. You drive workflows with natural-language prompts in Cursor Agent mode or Claude Code. Karpathy’s gist names the schema `CLAUDE.md` for Claude and `AGENTS.md` for Codex; this template uses `AGENTS.md` for both (see [Using with Claude Code](#using-with-claude-code) below).
 
 ## Quick start
 
@@ -29,18 +31,49 @@ This template is a **lightweight, Cursor + `AGENTS.md` variant**—not a fork of
 ```
 my-topic-wiki/
 ├── AGENTS.md            # schema: agent contract (read this first)
+├── CLAUDE.md            # optional: copy/symlink of AGENTS.md for Claude Code
 ├── Agent.md             # points to AGENTS.md (backward compatibility)
 ├── README.md
-├── .cursor/rules/       # optional: loads AGENTS.md in Cursor
+├── .cursor/rules/       # optional: Cursor only — loads AGENTS.md
 ├── raw/                 # drop PDFs, .md, .txt here
 └── wiki/
     ├── index.md         # categorized table of contents
     └── log.md           # append-only operation log
 ```
 
-4. **Open the folder in Cursor** and use **Agent mode**. The agent follows [`AGENTS.md`](AGENTS.md). A Cursor rule in `.cursor/rules/wiki.mdc` points agents at the schema automatically.
+4. **Open the folder in your agent**:
+   - **Cursor** — open the wiki folder, use **Agent mode**. The rule in `.cursor/rules/wiki.mdc` points the agent at [`AGENTS.md`](AGENTS.md) automatically.
+   - **Claude Code** — `cd` into the wiki folder and run `claude`. See [Using with Claude Code](#using-with-claude-code).
 
-5. **Add a source** to `raw/`, then prompt: *"Ingest `raw/your-file.pdf` into the wiki."*
+5. **Add a source** to `raw/`, then prompt: *"Ingest `raw/your-file.pdf` into the wiki."* (same prompts in Cursor or Claude.)
+
+## Using with Claude Code
+
+[Claude Code](https://docs.anthropic.com/en/docs/claude-code) reads project instructions from markdown at the repo root. Karpathy’s pattern calls this file **`CLAUDE.md`**; this template ships **`AGENTS.md`** (same content convention, works across agents).
+
+**Option A — symlink or copy (recommended)**
+
+```bash
+cp AGENTS.md CLAUDE.md
+# or: ln -s AGENTS.md CLAUDE.md
+```
+
+Edit either file; keep them in sync if you use both Cursor and Claude on the same wiki.
+
+**Option B — single file**
+
+Open the project in Claude Code and start each session with: *"Follow AGENTS.md for all wiki work."* Claude will read it when you reference it or when it explores the repo.
+
+**Claude workflow** (identical operations to Cursor):
+
+```bash
+cd my-topic-wiki
+claude
+```
+
+Then use the same prompts: ingest, query, lint. Claude should never edit `raw/`; it should update `wiki/`, `wiki/index.md`, and `wiki/log.md` per the schema.
+
+**Note:** `.cursor/rules/` only applies in Cursor. Claude relies on `CLAUDE.md` / `AGENTS.md` at the project root, not Cursor rules.
 
 ## Folder layout
 
@@ -63,7 +96,7 @@ AGENTS.md         -- schema (structure, workflows, conventions)
 
 ### Ingest
 
-Add a file to `raw/` (e.g. `paper.pdf`, `notes.md`), then ask Cursor:
+Add a file to `raw/` (e.g. `paper.pdf`, `notes.md`), then ask your agent (Cursor or Claude):
 
 - *"Ingest `raw/paper.pdf` into the wiki."*
 - *"Ingest all new files in `raw/`."*
@@ -175,6 +208,8 @@ Keep detailed agent rules in `AGENTS.md`; keep this README focused on how humans
 
 ## What you need
 
-- [Cursor](https://cursor.com) with Agent mode
+- **One agent environment** (pick either or both):
+  - [Cursor](https://cursor.com) with Agent mode, or
+  - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (Anthropic API or subscription per Anthropic’s terms)
 - Local Markdown/PDF/text sources
-- No API keys or cloud services required—the wiki is local files only
+- The wiki itself is **local files only** (`raw/`, `wiki/`). No extra wiki hosting or vector DB is required; your agent provider may need network access for the LLM API when you run ingest/query/lint.

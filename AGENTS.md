@@ -1,7 +1,7 @@
 # LLM Wiki
 
-A personal knowledge base maintained by Cursor AI.
-Based on Andrej Karpathy's [LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) pattern.
+A personal knowledge base maintained by an AI agent (Cursor, Claude Code, or any tool that reads this schema).
+Based on Andrej Karpathy's [LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) pattern. For Claude Code, copy or symlink this file to `CLAUDE.md` at the project root (see README).
 
 This file is the **schema** — it tells the agent how the wiki is structured, what conventions to follow, and what workflows to run. Co-evolve it with your domain as you learn what works. If this file conflicts with a generic chat habit, **this file wins**.
 
